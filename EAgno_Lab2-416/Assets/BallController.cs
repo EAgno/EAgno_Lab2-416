@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BallController : MonoBehaviour
@@ -12,6 +11,7 @@ public class BallController : MonoBehaviour
     private Rigidbody ballRB;
     [SerializeField] private InputManager inputManager;
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ballRB = GetComponent<Rigidbody>();
@@ -20,6 +20,7 @@ public class BallController : MonoBehaviour
         ResetBall();
     }
 
+    // Update is called once per frame
     void Update()
     {
 
