@@ -1,5 +1,6 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private float score = 0;
@@ -10,8 +11,8 @@ public class GameManager : MonoBehaviour
     // A reference for our PinCollection prefab we made in Section 2.2
     [SerializeField] private GameObject pinCollection;
 
-    // use to spawn our pin collection prefab
     // A reference for an empty GameObject which we'll
+    // use to spawn our pin collection prefab
     [SerializeField] private Transform pinAnchor;
 
     // A reference for our input manager
@@ -21,8 +22,10 @@ public class GameManager : MonoBehaviour
     private FallTrigger[] fallTriggers;
     private GameObject pinObjects;
 
-    void Start()
+    private void Start()
     {
+        // Adding the HandleReset function as a listener to our
+        // newly added OnResetPressedEvent
         inputManager.OnResetPressed.AddListener(HandleReset);
         SetPins();
     }
@@ -33,23 +36,27 @@ public class GameManager : MonoBehaviour
         SetPins();
     }
 
-
     private void SetPins()
     {
-        Debug.Log("SetPins called at: " + Time.time);
+        // We first make sure that all the previous pins have been destroyed
+        // this is so that we don't create a new collection of
+        // standing pins on top of already fallen pins
         if (pinObjects)
         {
             foreach (Transform child in pinObjects.transform)
             {
                 Destroy(child.gameObject);
             }
+
             Destroy(pinObjects);
         }
 
+        // We then instantiate a new set of pins to our pin anchor transform
         pinObjects = Instantiate(pinCollection, pinAnchor.transform.position, Quaternion.identity, transform);
 
+        // We add the Increment Score function as a listener to
+        // the OnPinFall event each of new pins
         fallTriggers = FindObjectsByType<FallTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
         foreach (FallTrigger pin in fallTriggers)
         {
             pin.OnPinFall.AddListener(IncrementScore);
@@ -61,5 +68,4 @@ public class GameManager : MonoBehaviour
         score++;
         scoreText.text = $"Score: {score}";
     }
-
 }

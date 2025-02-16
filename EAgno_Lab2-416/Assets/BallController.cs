@@ -1,17 +1,17 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(Rigidbody))]
 public class BallController : MonoBehaviour
 {
-    [SerializeField] private float force = 1f;
+    [SerializeField] private float force = 10f;
     [SerializeField] private Transform ballAnchor;
+    [SerializeField] private InputManager inputManager;
     [SerializeField] private Transform launchIndicator;
 
-    private bool isBallLaunched = false;
-    private Rigidbody ballRB;
-    [SerializeField] private InputManager inputManager;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool isBallLaunched;
+    private Rigidbody ballRB;
+
     void Start()
     {
         ballRB = GetComponent<Rigidbody>();
@@ -20,10 +20,13 @@ public class BallController : MonoBehaviour
         ResetBall();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ResetBall()
     {
-
+        isBallLaunched = false;
+        ballRB.isKinematic = true;
+        launchIndicator.gameObject.SetActive(true);
+        transform.parent = ballAnchor;
+        transform.localPosition = Vector3.zero;
     }
 
     private void LaunchBall()
@@ -34,15 +37,5 @@ public class BallController : MonoBehaviour
         ballRB.isKinematic = false;
         ballRB.AddForce(launchIndicator.forward * force, ForceMode.Impulse);
         launchIndicator.gameObject.SetActive(false);
-    }
-
-    public void ResetBall()
-    {
-        isBallLaunched = false;
-
-        ballRB.isKinematic = true;
-        launchIndicator.gameObject.SetActive(true);
-        transform.parent = ballAnchor;
-        transform.localPosition = Vector3.zero;
     }
 }
